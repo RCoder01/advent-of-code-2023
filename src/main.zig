@@ -1,20 +1,39 @@
 const std = @import("std");
 const root = @import("root.zig");
 
+const day1 = @import("day1.zig");
+
+fn callDay(day: u8, part: u8, file: *std.fs.File) !i32 {
+    switch (day) {
+        1 => if (part == 1) {
+            return try day1.part1(file);
+        } else if (part == 2) {
+            return try day1.part2(file);
+        } else {
+            return error.partOutOfRange;
+        },
+        else => {
+            return error.dayOutOfRange;
+        },
+    }
+    unreachable;
+}
+
 pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All {d} of your {s} are belong to us.\n", .{ root.add(2, 5), "codebase" });
-
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var args = try std.process.argsWithAllocator(gpa.allocator());
+    defer args.deinit();
+    _ = args.next();
+    const day = try std.fmt.parseInt(u8, args.next().?, 10);
+    const part = try std.fmt.parseInt(u8, args.next().?, 10);
+    const filepath = args.next().?;
+    var file = try std.fs.cwd().openFile(filepath, .{});
+    const result = try callDay(day, part, &file);
+    const stdout_writer = std.io.getStdOut().writer();
+    var bw = std.io.bufferedWriter(stdout_writer);
     const stdout = bw.writer();
-
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
-
-    try bw.flush(); // don't forget to flush!
+    try stdout.print("{d}", .{result});
+    try bw.flush();
 }
 
 test "simple test" {
