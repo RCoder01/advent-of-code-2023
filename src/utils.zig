@@ -16,10 +16,6 @@ pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
         len: usize = 0,
         const Self = @This();
 
-        // pub fn new() Self {
-        //     return Self{ .buf = undefined, .len = 0 };
-        // }
-
         pub fn append(self: *Self, e: T) !void {
             if (self.len == N) {
                 return error.capacityReached;
