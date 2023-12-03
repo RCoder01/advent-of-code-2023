@@ -35,13 +35,13 @@ pub fn part1(file: *std.fs.File) !i32 {
         for (line, 0..line.len) |ch, i| {
             // std.debug.print("{c}", .{ch});
             if (ch == '.' or ch == '\n' or ch == '\r') {
-                if (num_start != null) {
-                    const num = try std.fmt.parseInt(i32, line[num_start.?..i], 10);
+                if (num_start) |num_start_| {
+                    const num = try std.fmt.parseInt(i32, line[num_start_..i], 10);
                     // std.debug.print("\n{d}\n", .{num});
-                    const nstart: i32 = @intCast(num_start.?);
+                    const nstart: i32 = @intCast(num_start_);
                     const start = nstart - 1;
                     const end: i32 = @intCast(i + 1);
-                    if ((num_start != 0 and line[num_start.? - 1] != '.') or range_contains(start, end, prev_line_symbols.data())) {
+                    if ((num_start != 0 and line[num_start_ - 1] != '.') or range_contains(start, end, prev_line_symbols.data())) {
                         // std.debug.print("imm num {d}\n", .{num});
                         sum += num;
                     } else {
@@ -55,8 +55,8 @@ pub fn part1(file: *std.fs.File) !i32 {
                 }
             } else {
                 // std.debug.print("!{d}!", .{ch});
-                if (num_start != null) {
-                    const num = try std.fmt.parseInt(i32, line[num_start.?..i], 10);
+                if (num_start) |num_start_| {
+                    const num = try std.fmt.parseInt(i32, line[num_start_..i], 10);
                     // std.debug.print("\n{d}\n", .{num});
                     // std.debug.print("imm num 2 {d}\n", .{num});
                     sum += num;
@@ -110,10 +110,10 @@ pub fn part2(file: *std.fs.File) !i32 {
                 if (num_start == null) {
                     num_start = i;
                 }
-            } else if (num_start != null) {
-                const num = try std.fmt.parseInt(i32, line[num_start.?..i], 10);
+            } else if (num_start) |num_start_| {
+                const num = try std.fmt.parseInt(i32, line[num_start_..i], 10);
                 // std.debug.print("\n{d}\n", .{num});
-                const start: i32 = @intCast(num_start.?);
+                const start: i32 = @intCast(num_start_);
                 const end: i32 = @intCast(i + 1);
                 try this_line.append(NumRange{ .num = num, .min = start - 1, .max = end });
                 num_start = null;
