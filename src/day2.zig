@@ -1,14 +1,5 @@
 const std = @import("std");
-
-fn find(buf: []u8, delim: u8) ?usize {
-    var i: usize = 0;
-    while (i < buf.len) : (i += 1) {
-        if (buf[i] == delim) {
-            return i;
-        }
-    }
-    return null;
-}
+const utils = @import("utils.zig");
 
 pub fn part1(file: *std.fs.File) !i32 {
     var buf: [200]u8 = undefined;
@@ -17,7 +8,7 @@ pub fn part1(file: *std.fs.File) !i32 {
     var game_num: i32 = 0;
     while (try reader.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         game_num += 1;
-        const first = find(line, ':') orelse return error.MissingCharacter;
+        const first = utils.find(line, ':') orelse return error.MissingCharacter;
         var games = line[first + 2 ..];
         if (games[games.len - 1] == '\n') {
             games = games[0 .. games.len - 1];
@@ -27,9 +18,9 @@ pub fn part1(file: *std.fs.File) !i32 {
         var blue: i32 = 0;
         var plausible = true;
         while (games.len > 0) {
-            const end = find(games, ';') orelse games.len - 1;
-            const num = find(games, ' ') orelse return error.MissingCharacter;
-            var color = find(games, ',') orelse games.len - 1;
+            const end = utils.find(games, ';') orelse games.len - 1;
+            const num = utils.find(games, ' ') orelse return error.MissingCharacter;
+            var color = utils.find(games, ',') orelse games.len - 1;
             if (end < color) {
                 color = end;
             }
@@ -73,7 +64,7 @@ pub fn part2(file: *std.fs.File) !i32 {
     var game_num: i32 = 0;
     while (try reader.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         game_num += 1;
-        const first = find(line, ':') orelse return error.MissingCharacter;
+        const first = utils.find(line, ':') orelse return error.MissingCharacter;
         var games = line[first + 2 ..];
         if (games[games.len - 1] == '\n') {
             games = games[0 .. games.len - 1];
@@ -85,9 +76,9 @@ pub fn part2(file: *std.fs.File) !i32 {
         var min_green: i32 = 0;
         var min_blue: i32 = 0;
         while (games.len > 0) {
-            const end = find(games, ';') orelse games.len - 1;
-            const num = find(games, ' ') orelse return error.MissingCharacter;
-            var color = find(games, ',') orelse games.len - 1;
+            const end = utils.find(games, ';') orelse games.len - 1;
+            const num = utils.find(games, ' ') orelse return error.MissingCharacter;
+            var color = utils.find(games, ',') orelse games.len - 1;
             if (end < color) {
                 color = end;
             }
