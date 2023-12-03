@@ -25,11 +25,11 @@ pub fn part1(file: *std.fs.File) !i32 {
     const reader = file.reader();
     var sum: i32 = 0;
     const NumRangeBufList = utils.BufferList(32, NumRange);
-    var prev_line = NumRangeBufList.new();
-    var this_line = NumRangeBufList.new();
+    var prev_line = NumRangeBufList{};
+    var this_line = NumRangeBufList{};
     const IntBufList = utils.BufferList(150, i32);
-    var prev_line_symbols = IntBufList.new();
-    var this_line_symbols = IntBufList.new();
+    var prev_line_symbols = IntBufList{};
+    var this_line_symbols = IntBufList{};
     while (try reader.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         var num_start: ?usize = null;
         for (line, 0..line.len) |ch, i| {
@@ -94,17 +94,17 @@ pub fn part2(file: *std.fs.File) !i32 {
     const reader = file.reader();
     var sum: i32 = 0;
     const NumRangeBufList = utils.BufferList(32, NumRange);
-    var prev_line = NumRangeBufList.new();
-    var this_line = NumRangeBufList.new();
+    var prev_line = NumRangeBufList{};
+    var this_line = NumRangeBufList{};
     const RatioBufList = utils.BufferList(150, RatioSpec);
-    var prev_line_symbols = RatioBufList.new();
-    var this_line_symbols = RatioBufList.new();
+    var prev_line_symbols = RatioBufList{};
+    var this_line_symbols = RatioBufList{};
     while (try reader.readUntilDelimiterOrEof(&buf, '\n')) |line| {
         var num_start: ?usize = null;
         for (line, 0..line.len) |ch, i| {
             // std.debug.print("{c}", .{ch});
             if (ch == '*') {
-                try this_line_symbols.append(RatioSpec{ .idx = @intCast(i), .nums = ThreeIntList.new() });
+                try this_line_symbols.append(RatioSpec{ .idx = @intCast(i), .nums = ThreeIntList{} });
             }
             if ('0' <= ch and ch <= '9') {
                 if (num_start == null) {

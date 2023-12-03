@@ -12,13 +12,13 @@ pub fn find(buf: []u8, delim: u8) ?usize {
 
 pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
     return struct {
-        buf: [N]T,
-        len: usize,
+        buf: [N]T = undefined,
+        len: usize = 0,
         const Self = @This();
 
-        pub fn new() Self {
-            return Self{ .buf = undefined, .len = 0 };
-        }
+        // pub fn new() Self {
+        //     return Self{ .buf = undefined, .len = 0 };
+        // }
 
         pub fn append(self: *Self, e: T) !void {
             if (self.len == N) {
