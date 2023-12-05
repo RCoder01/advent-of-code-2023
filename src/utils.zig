@@ -31,6 +31,14 @@ pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
         pub fn clear(self: *Self) void {
             self.len = 0;
         }
+
+        pub fn pop(self: *Self) ?T {
+            if (self.len == 0) {
+                return null;
+            }
+            self.len -= 1;
+            return self.buf[self.len];
+        }
     };
 }
 
