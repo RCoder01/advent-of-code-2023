@@ -33,3 +33,14 @@ pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
         }
     };
 }
+
+// pub fn StackMap(comptime N: comptime_int, comptime K: type, comptime V: type) type {
+//     return struct {
+//         kbuf: [N]K = undefined,
+//         vbuf: [N]V = undefined,
+//         len: usize = 0,
+//         const Self = @This();
+
+//         pub fn
+//     }
+// }
