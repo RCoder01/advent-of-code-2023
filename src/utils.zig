@@ -42,6 +42,44 @@ pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
     };
 }
 
+const Split = struct {
+    line: []u8,
+    delim: u8,
+    const Self = @This();
+
+    pub fn next(self: *Self) ?[]u8 {
+        const first = find(self.line, self.delim) orelse return null;
+        const ret = self.line[0..first];
+        self.line = self.line[first..];
+        return ret;
+    }
+};
+
+pub fn SplitNums(comptime T: type) type {
+    return struct {
+        line: []u8,
+        const Self = @This();
+
+        pub fn next(self: *Self) !?T {
+            var i: usize = 0;
+            var num_start: ?usize = null;
+            while (i < self.line.len) : (i += 1) {
+                if (std.ascii.isDigit(self.line[i])) {
+                    num_start = i;
+                    break;
+                }
+            }
+            var num_end = num_start orelse return null;
+            while (i < self.line.len and std.ascii.isDigit(self.line[i])) : (i += 1) {
+                num_end += 1;
+            }
+            const num = try std.fmt.parseInt(T, self.line[num_start.?..num_end], 10);
+            self.line = self.line[num_end..];
+            return num;
+        }
+    };
+}
+
 // pub fn StackMap(comptime N: comptime_int, comptime K: type, comptime V: type) type {
 //     return struct {
 //         kbuf: [N]K = undefined,
