@@ -28,6 +28,10 @@ pub fn BufferList(comptime N: comptime_int, comptime T: type) type {
             return self.buf[0..self.len];
         }
 
+        pub fn const_data(self: *const Self) []const T {
+            return self.buf[0..self.len];
+        }
+
         pub fn clear(self: *Self) void {
             self.len = 0;
         }
