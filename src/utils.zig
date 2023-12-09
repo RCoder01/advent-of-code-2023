@@ -68,12 +68,13 @@ pub fn SplitNums(comptime T: type) type {
             var i: usize = 0;
             var num_start: ?usize = null;
             while (i < self.line.len) : (i += 1) {
-                if (std.ascii.isDigit(self.line[i])) {
+                if (std.ascii.isDigit(self.line[i]) or self.line[i] == '-') {
                     num_start = i;
                     break;
                 }
             }
-            var num_end = num_start orelse return null;
+            var num_end = (num_start orelse return null) + 1;
+            i += 1;
             while (i < self.line.len and std.ascii.isDigit(self.line[i])) : (i += 1) {
                 num_end += 1;
             }
