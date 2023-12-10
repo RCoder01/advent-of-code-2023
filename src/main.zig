@@ -10,6 +10,7 @@ const day6 = @import("day6.zig");
 const day7 = @import("day7.zig");
 const day8 = @import("day8.zig");
 const day9 = @import("day9.zig");
+const day10 = @import("day10.zig");
 
 fn callDay(day: u8, part: u8, file: *std.fs.File) !i32 {
     switch (day) {
@@ -73,6 +74,13 @@ fn callDay(day: u8, part: u8, file: *std.fs.File) !i32 {
             return try day9.part1(file);
         } else if (part == 2) {
             return try day9.part2(file);
+        } else {
+            return error.partOutOfRange;
+        },
+        10 => if (part == 1) {
+            return try day10.part1(file);
+        } else if (part == 2) {
+            return try day10.part2(file);
         } else {
             return error.partOutOfRange;
         },
