@@ -1,100 +1,54 @@
 const std = @import("std");
 const root = @import("root.zig");
 
-const day1 = @import("day1.zig");
-const day2 = @import("day2.zig");
-const day3 = @import("day3.zig");
-const day4 = @import("day4.zig");
-const day5 = @import("day5.zig");
-const day6 = @import("day6.zig");
-const day7 = @import("day7.zig");
-const day8 = @import("day8.zig");
-const day9 = @import("day9.zig");
-const day10 = @import("day10.zig");
-const day11 = @import("day11.zig");
+const Day = struct {
+    part1: *const fn (*std.fs.File) anyerror!isize,
+    part2: *const fn (*std.fs.File) anyerror!isize,
 
-fn callDay(day: u8, part: u8, file: *std.fs.File) !isize {
-    switch (day) {
-        1 => if (part == 1) {
-            return try day1.part1(file);
-        } else if (part == 2) {
-            return try day1.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        2 => if (part == 1) {
-            return try day2.part1(file);
-        } else if (part == 2) {
-            return try day2.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        3 => if (part == 1) {
-            return try day3.part1(file);
-        } else if (part == 2) {
-            return try day3.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        4 => if (part == 1) {
-            return try day4.part1(file);
-        } else if (part == 2) {
-            return try day4.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        5 => if (part == 1) {
-            return try day5.part1(file);
-        } else if (part == 2) {
-            return try day5.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        6 => if (part == 1) {
-            return try day6.part1(file);
-        } else if (part == 2) {
-            return try day6.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        7 => if (part == 1) {
-            return try day7.part1(file);
-        } else if (part == 2) {
-            return try day7.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        8 => if (part == 1) {
-            return try day8.part1(file);
-        } else if (part == 2) {
-            return try day8.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        9 => if (part == 1) {
-            return try day9.part1(file);
-        } else if (part == 2) {
-            return try day9.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        10 => if (part == 1) {
-            return try day10.part1(file);
-        } else if (part == 2) {
-            return try day10.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        11 => if (part == 1) {
-            return try day11.part1(file);
-        } else if (part == 2) {
-            return try day11.part2(file);
-        } else {
-            return error.partOutOfRange;
-        },
-        else => {
-            return error.dayOutOfRange;
-        },
+    fn create(comptime day: anytype) Day {
+        const DayWrapper = struct {
+            fn part1(file: *std.fs.File) anyerror!isize {
+                return try day.part1(file);
+            }
+
+            fn part2(file: *std.fs.File) anyerror!isize {
+                return try day.part2(file);
+            }
+        };
+
+        return .{
+            .part1 = DayWrapper.part1,
+            .part2 = DayWrapper.part2,
+        };
+    }
+};
+
+// Adapted from https://github.com/Earthcomputer/aoc2023/blob/master/src/main.zig
+const days = [_]Day{
+    Day.create(@import("day1.zig")),
+    Day.create(@import("day2.zig")),
+    Day.create(@import("day3.zig")),
+    Day.create(@import("day4.zig")),
+    Day.create(@import("day5.zig")),
+    Day.create(@import("day6.zig")),
+    Day.create(@import("day7.zig")),
+    Day.create(@import("day8.zig")),
+    Day.create(@import("day9.zig")),
+    Day.create(@import("day10.zig")),
+    Day.create(@import("day11.zig")),
+};
+
+fn callDay(daynum: u8, part: u8, file: *std.fs.File) !isize {
+    if (0 == daynum or daynum > days.len) {
+        return error.DayOutOfRange;
+    }
+    const day = days[daynum - 1];
+    if (part == 1) {
+        return try day.part1(file);
+    } else if (part == 2) {
+        return try day.part2(file);
+    } else {
+        return error.PartOutOfRange;
     }
     unreachable;
 }
