@@ -1,5 +1,4 @@
 const std = @import("std");
-const root = @import("root.zig");
 
 const Day = struct {
     part1: *const fn (*std.fs.File) anyerror!isize,
