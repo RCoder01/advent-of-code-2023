@@ -36,6 +36,7 @@ const days = [_]Day{
     Day.create(@import("day9.zig")),
     Day.create(@import("day10.zig")),
     Day.create(@import("day11.zig")),
+    Day.create(@import("day12.zig")),
 };
 
 fn callDay(daynum: u8, part: u8, file: *std.fs.File) !isize {
